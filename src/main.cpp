@@ -1,8 +1,77 @@
-﻿#include <iostream>
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#include <iostream>
+#include <stdexcept>
+#include <cstdlib>
+
+// GLOBALS
+const uint32_t WIDTH = 800;
+const uint32_t HEIGHT = 600;
+
+class HelloTriangleApplication
+{
+public:
+	void run()
+	{
+		initWindow();
+		initVulkan();
+		mainLoop();
+		cleanup();
+	}
+
+private:
+	void initWindow()
+	{
+		glfwInit();
+
+		// Hints to GLFW to not use the OpenGL API.
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+		window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+	}
+
+	void initVulkan()
+	{
+		// Calls other helper functions that initialize Vulkan objects.
+	}
+
+	void mainLoop()
+	{
+		// Mainloop continues to run until the GLFW window is closed or an error occurs.
+		while (!glfwWindowShouldClose(window))
+		{
+			glfwPollEvents();
+		}
+	}
+
+	void cleanup()
+	{
+		// Cleans up GLFW resources.
+		glfwDestroyWindow(window);
+		glfwTerminate();
+	}
+
+private:
+	GLFWwindow* window;
+};
 
 int main()
 {
-	std::cout << "Hello Vulkan!" << std::endl;
+	HelloTriangleApplication app;
 
-	return 0;
+	try
+	{
+		app.run();
+	}
+	
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+
+		return EXIT_FAILURE;
+	}
+
+	return EXIT_SUCCESS;
 }
