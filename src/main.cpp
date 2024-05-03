@@ -72,6 +72,7 @@ private:
 		createInstance();
 		setupDebugMessenger();
 		pickPhysicalDevice();
+		createLogicalDevice();
 	}
 
 	void mainLoop()
@@ -84,7 +85,9 @@ private:
 
 	void cleanup()
 	{
-		if (ENABLE_VALIDATION_LAYERS)
+		vkDestroyDevice(mDevice, nullptr);
+
+		if (VALIDATION_LAYERS_ENABLED)
 		{
 			DestroyDebugMessengerEXT(mInstance, mDebugMessenger, nullptr);
 		}
@@ -97,6 +100,50 @@ private:
 	}
 
 private:
+	void createLogicalDevice()
+	{
+		QueueFamilyIndices indices = findQueueFamilies(mPhysicalDevice);
+
+		VkDeviceQueueCreateInfo queueCreateInfo{};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+
+		queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+		queueCreateInfo.queueCount = 1;
+
+		float queuePriority = 1.0;
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+
+		VkPhysicalDeviceFeatures deviceFeatures{};
+
+		VkDeviceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+		createInfo.pQueueCreateInfos = &queueCreateInfo;
+		createInfo.queueCreateInfoCount = 1;
+
+		createInfo.pEnabledFeatures = &deviceFeatures;
+
+		createInfo.enabledExtensionCount = 0;
+
+		if (VALIDATION_LAYERS_ENABLED)
+		{
+			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+			createInfo.ppEnabledLayerNames = validationLayers.data();
+		}
+
+		else
+		{
+			createInfo.enabledLayerCount = 0;
+		}
+
+		if (vkCreateDevice(mPhysicalDevice, &createInfo, nullptr, &mDevice) != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to create logical device!");
+		}
+
+		vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
+	}
+
 	struct QueueFamilyIndices
 	{
 		std::optional<uint32_t> graphicsFamily;
@@ -176,7 +223,7 @@ private:
 
 	void setupDebugMessenger()
 	{
-		if (!ENABLE_VALIDATION_LAYERS)
+		if (!VALIDATION_LAYERS_ENABLED)
 		{
 			return;
 		}
@@ -238,7 +285,7 @@ private:
 		glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 		std::vector<const char*> requiredExtensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-		if (ENABLE_VALIDATION_LAYERS)
+		if (VALIDATION_LAYERS_ENABLED)
 		{
 			requiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 		}
@@ -273,24 +320,22 @@ private:
 		{
 			throw std::runtime_error("Extensions requested, but are not available!");
 		}
-		uint32_t requiredExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
-		const char** requiredExtensionNames = requiredExtensions.data();
 
 		VkInstanceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
-		createInfo.enabledExtensionCount = requiredExtensionCount;
-		createInfo.ppEnabledExtensionNames = requiredExtensionNames;
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
+		createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 		createInfo.enabledLayerCount = 0;
 
 		std::vector<VkLayerProperties> availableLayers = getAvailableValidationLayers();
-		if (ENABLE_VALIDATION_LAYERS && !checkValidationLayerSupport(availableLayers))
+		if (VALIDATION_LAYERS_ENABLED && !checkValidationLayerSupport(availableLayers))
 		{
 			throw std::runtime_error("Validation layers requested, but are not available!");
 		}
 
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-		if (ENABLE_VALIDATION_LAYERS)
+		if (VALIDATION_LAYERS_ENABLED)
 		{
 			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 			createInfo.ppEnabledLayerNames = validationLayers.data();
@@ -317,6 +362,8 @@ private:
 	VkInstance mInstance;
 	VkDebugUtilsMessengerEXT mDebugMessenger;
 	VkPhysicalDevice mPhysicalDevice;
+	VkDevice mDevice;
+	VkQueue graphicsQueue;
 };
 
 int main()

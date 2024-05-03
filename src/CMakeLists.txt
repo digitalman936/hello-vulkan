@@ -24,6 +24,6 @@ else()
 endif()
 
 target_compile_definitions(hello-vulkan PRIVATE 
-    "$<$<CONFIG:Debug>:ENABLE_VALIDATION_LAYERS=1>"
-    "$<$<NOT:$<CONFIG:Debug>>:ENABLE_VALIDATION_LAYERS=0>"
+    "$<$<CONFIG:Debug>:VALIDATION_LAYERS_ENABLED=1>"
+    "$<$<NOT:$<CONFIG:Debug>>:VALIDATION_LAYERS_ENABLED=0>"
 )
