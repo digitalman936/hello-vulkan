@@ -1,4 +1,52 @@
-﻿add_executable(hello-vulkan main.cpp)
+﻿function(compile_shader shader_source shader_output)
+    find_program(GLSLC_EXECUTABLE NAMES glslc HINTS ${VULKAN_SDK}/Bin)
+    if(NOT GLSLC_EXECUTABLE)
+        message(FATAL_ERROR "glslc not found")
+    endif()
+
+    # Calculate the full path to the shader source file
+    set(shader_source_file "${CMAKE_CURRENT_SOURCE_DIR}/${shader_source}")
+    # Calculate the full path to the output SPIR-V binary file
+    set(shader_output_file "${CMAKE_BINARY_DIR}/${shader_output}")
+
+    add_custom_command(
+        OUTPUT ${shader_output_file}
+        COMMAND ${GLSLC_EXECUTABLE} ${shader_source_file} -o ${shader_output_file}
+        DEPENDS ${shader_source_file}
+        COMMENT "Compiling ${shader_source}"
+    )
+    set_source_files_properties(${shader_output_file} PROPERTIES GENERATED TRUE)
+    list(APPEND SPIRV_BINARY_FILES ${shader_output_file})
+    set(SPIRV_BINARY_FILES ${SPIRV_BINARY_FILES} PARENT_SCOPE)
+
+    # Store the full paths of the compiled and source shaders in global properties
+    set_property(GLOBAL APPEND PROPERTY COMPILED_SHADERS ${shader_output_file})
+    set_property(GLOBAL APPEND PROPERTY SOURCE_SHADERS ${shader_source_file})
+endfunction()
+
+# Compile shaders
+compile_shader("shaders/shader.vert" "vert.spv")
+compile_shader("shaders/shader.frag" "frag.spv")
+
+add_executable(hello-vulkan main.cpp ${SPIRV_BINARY_FILES})
+
+# Retrieve the full paths of the compiled and source shaders
+get_property(COMPILED_SHADER_PATHS GLOBAL PROPERTY COMPILED_SHADERS)
+get_property(SOURCE_SHADER_PATHS GLOBAL PROPERTY SOURCE_SHADERS)
+
+# Assuming the first shader is vert and the second is frag
+list(GET COMPILED_SHADER_PATHS 0 COMPILED_VERT_SHADER_PATH)
+list(GET COMPILED_SHADER_PATHS 1 COMPILED_FRAG_SHADER_PATH)
+list(GET SOURCE_SHADER_PATHS 0 SOURCE_VERT_SHADER_PATH)
+list(GET SOURCE_SHADER_PATHS 1 SOURCE_FRAG_SHADER_PATH)
+
+# Define preprocessor macros to pass the paths to the source code
+target_compile_definitions(hello-vulkan PRIVATE 
+    COMPILED_VERT_SHADER_PATH="${COMPILED_VERT_SHADER_PATH}"
+    COMPILED_FRAG_SHADER_PATH="${COMPILED_FRAG_SHADER_PATH}"
+    SOURCE_VERT_SHADER_PATH="${SOURCE_VERT_SHADER_PATH}"
+    SOURCE_FRAG_SHADER_PATH="${SOURCE_FRAG_SHADER_PATH}"
+)
 
 if(CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET hello-vulkan PROPERTY CXX_STANDARD 20)

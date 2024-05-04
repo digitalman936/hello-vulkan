@@ -5,3 +5,4 @@ out/
 # files
 CMakeSettings.json
 CMakePresets.json
+**.spv
