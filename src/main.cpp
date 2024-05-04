@@ -53,6 +53,24 @@ void DestroyDebugMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debu
 	}
 }
 
+struct SwapChainSupportDetails
+{
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
+};
+
+struct QueueFamilyIndices
+{
+	std::optional<uint32_t> graphicsFamily;
+	std::optional<uint32_t> presentFamily;
+
+	bool isComplete()
+	{
+		return graphicsFamily.has_value() && presentFamily.has_value();
+	}
+};
+
 class HelloTriangleApplication
 {
 public:
@@ -83,6 +101,7 @@ private:
 		pickPhysicalDevice();
 		createLogicalDevice();
 		createSwapChain();
+		createImageViews();
 	}
 
 	void mainLoop()
@@ -95,6 +114,11 @@ private:
 
 	void cleanup()
 	{
+		for (auto imageView : mSwapChainImageViews)
+		{
+			vkDestroyImageView(mDevice, imageView, nullptr);
+		}
+
 		vkDestroySwapchainKHR(mDevice, mSwapChain, nullptr);
 
 		vkDestroyDevice(mDevice, nullptr);
@@ -114,12 +138,36 @@ private:
 	}
 
 private:
-	struct SwapChainSupportDetails
+	void createImageViews()
 	{
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
-	};
+		mSwapChainImageViews.resize(mSwapChainImages.size());
+
+		for (size_t i = 0; i < mSwapChainImages.size(); i++)
+		{
+			VkImageViewCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			createInfo.image = mSwapChainImages[i];
+
+			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			createInfo.format = mSwapChainImageFormat;
+
+			createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			createInfo.subresourceRange.baseMipLevel = 0;
+			createInfo.subresourceRange.levelCount = 1;
+			createInfo.subresourceRange.baseArrayLayer = 0;
+			createInfo.subresourceRange.layerCount = 1;
+
+			if (vkCreateImageView(mDevice, &createInfo, nullptr, &mSwapChainImageViews[i]) != VK_SUCCESS)
+			{
+				throw std::runtime_error("Failed to create image views!");
+			}
+		}
+	}
 
 	void createSwapChain()
 	{
@@ -326,17 +374,6 @@ private:
 		vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
 		vkGetDeviceQueue(mDevice, indices.presentFamily.value(), 0, &mPresentQueue);
 	}
-
-	struct QueueFamilyIndices
-	{
-		std::optional<uint32_t> graphicsFamily;
-		std::optional<uint32_t> presentFamily;
-
-		bool isComplete()
-		{
-			return graphicsFamily.has_value() && presentFamily.has_value();
-		}
-	};
 
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
 	{
@@ -594,6 +631,7 @@ private:
 	std::vector<VkImage> mSwapChainImages;
 	VkFormat mSwapChainImageFormat;
 	VkExtent2D mSwapChainExtent;
+	std::vector<VkImageView> mSwapChainImageViews;
 };
 
 int main()
