@@ -5,6 +5,7 @@
     "glfw3",
     "vulkan",
     "glm",
+    "stb",
     {
       "name": "imgui",
       "features": [ "glfw-binding", "vulkan-binding" ]
