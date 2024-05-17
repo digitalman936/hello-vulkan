@@ -37,6 +37,7 @@ list(GET SOURCE_SHADER_PATHS 0 SOURCE_VERT_SHADER_PATH)
 list(GET SOURCE_SHADER_PATHS 1 SOURCE_FRAG_SHADER_PATH)
 
 target_compile_definitions(hello-vulkan PRIVATE 
+    MODEL_PATH="${CMAKE_CURRENT_SOURCE_DIR}/models"
     TEXTURE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/textures"
     COMPILED_VERT_SHADER_PATH="${COMPILED_VERT_SHADER_PATH}"
     COMPILED_FRAG_SHADER_PATH="${COMPILED_FRAG_SHADER_PATH}"
@@ -60,8 +61,11 @@ target_link_libraries(hello-vulkan PRIVATE glm::glm)
 find_package(imgui CONFIG REQUIRED)
 target_link_libraries(hello-vulkan PRIVATE imgui::imgui)
 
- find_package(Stb REQUIRED)
+find_package(Stb REQUIRED)
 target_include_directories(hello-vulkan PRIVATE ${Stb_INCLUDE_DIR})
+
+find_package(tinyobjloader CONFIG REQUIRED)
+target_link_libraries(hello-vulkan PRIVATE tinyobjloader::tinyobjloader)
 
 # Define DEBUG macro based on the build type
 if(CMAKE_BUILD_TYPE MATCHES Debug)
