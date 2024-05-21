@@ -41,7 +41,7 @@ const std::vector<const char *> validationLayers = { "VK_LAYER_KHRONOS_validatio
 
 const std::vector<const char *> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-VkResult CreateDebugUtilsMessengerEXT (VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+VkResult CreateDebugUtilsMessengerEXT (const VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
                                        const VkAllocationCallbacks* pAllocator,
                                        VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
@@ -57,7 +57,7 @@ VkResult CreateDebugUtilsMessengerEXT (VkInstance instance, const VkDebugUtilsMe
     }
 }
 
-void DestroyDebugUtilsMessengerEXT (VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger,
+void DestroyDebugUtilsMessengerEXT (const VkInstance instance, const VkDebugUtilsMessengerEXT debugMessenger,
                                     const VkAllocationCallbacks* pAllocator)
 {
     if (const auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(
@@ -880,7 +880,7 @@ public:
         generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
     }
 
-    void generateMipmaps (VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight,
+    void generateMipmaps (const VkImage image, const VkFormat imageFormat, const int32_t texWidth, const int32_t texHeight,
                           uint32_t mipLevels) const
     {
         // Check if image format supports linear blitting
@@ -1019,7 +1019,7 @@ public:
         return imageView;
     }
 
-    void createImage (const uint32_t width, const uint32_t height, uint32_t mipLevels, const VkFormat format,
+    void createImage (const uint32_t width, const uint32_t height, const uint32_t mipLevels, const VkFormat format,
                       const VkImageTiling tiling, const VkImageUsageFlags usage, const VkMemoryPropertyFlags properties,
                       VkImage& image, VkDeviceMemory& imageMemory) const
     {
@@ -1109,7 +1109,7 @@ public:
         endSingleTimeCommands(commandBuffer);
     }
 
-    void copyBufferToImage (VkBuffer buffer, VkImage image, const uint32_t width, const uint32_t height) const
+    void copyBufferToImage (const VkBuffer buffer, const VkImage image, const uint32_t width, const uint32_t height) const
     {
         const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -1197,7 +1197,7 @@ public:
 
     void createIndexBuffer ()
     {
-        VkDeviceSize bufferSize = sizeof (indices[0]) * indices.size();
+        const VkDeviceSize bufferSize = sizeof (indices[0]) * indices.size();
 
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
@@ -1227,7 +1227,7 @@ public:
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         {
-            VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+            constexpr VkDeviceSize bufferSize = sizeof(UniformBufferObject);
             createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
                          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i],
                          uniformBuffersMemory[i]);
@@ -1415,7 +1415,7 @@ public:
         }
     }
 
-    void recordCommandBuffer (VkCommandBuffer commandBuffer, const uint32_t imageIndex) const
+    void recordCommandBuffer (const VkCommandBuffer commandBuffer, const uint32_t imageIndex) const
     {
         VkCommandBufferBeginInfo beginInfo {};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1458,7 +1458,7 @@ public:
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
         const VkBuffer vertexBuffers[] = { vertexBuffer };
-        VkDeviceSize offsets[] = { 0 };
+        constexpr VkDeviceSize offsets[] = { 0 };
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
         vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
@@ -1547,7 +1547,7 @@ public:
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
         const VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
-        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        constexpr VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
@@ -1555,7 +1555,7 @@ public:
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
 
-        VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
+        const VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -1570,7 +1570,7 @@ public:
         presentInfo.waitSemaphoreCount = 1;
         presentInfo.pWaitSemaphores = signalSemaphores;
 
-        VkSwapchainKHR swapChains[] = { swapChain };
+        const VkSwapchainKHR swapChains[] = { swapChain };
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = swapChains;
 
@@ -1659,7 +1659,7 @@ public:
         }
     }
 
-    SwapChainSupportDetails querySwapChainSupport (VkPhysicalDevice device) const
+    SwapChainSupportDetails querySwapChainSupport (const VkPhysicalDevice device) const
     {
         SwapChainSupportDetails details;
 
