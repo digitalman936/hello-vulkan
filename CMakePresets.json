@@ -1,0 +1,108 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "ninja-generic",
+      "hidden": true,
+      "description": "Generic Ninja build using default compiler",
+      "generator": "Ninja"
+    },
+    {
+      "name": "gcc-debug",
+      "inherits": "ninja-generic",
+      "description": "Ninja Debug build using GCC",
+      "binaryDir": "${sourceDir}/build/cmake/ninja_gcc_debug",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "gcc-release",
+      "inherits": "ninja-generic",
+      "description": "Ninja Release build using GCC",
+      "binaryDir": "${sourceDir}/build/cmake/ninja_gcc_release",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "clang-debug",
+      "inherits": "ninja-generic",
+      "description": "Ninja Debug build using Clang",
+      "binaryDir": "${sourceDir}/build/cmake/ninja_clang_debug",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "clang-release",
+      "inherits": "ninja-generic",
+      "description": "Ninja Release build using Clang",
+      "binaryDir": "${sourceDir}/build/cmake/ninja_clang_release",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "msvc-debug",
+      "inherits": "ninja-generic",
+      "description": "Ninja Debug build using MSVC",
+      "binaryDir": "${sourceDir}/build/cmake/ninja_msvc_debug",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "msvc-release",
+      "inherits": "ninja-generic",
+      "description": "Ninja Release build using MSVC",
+      "binaryDir": "${sourceDir}/build/cmake/ninja_msvc_release",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "gcc-debug-build",
+      "description": "Build Debug using GCC",
+      "configurePreset": "gcc-debug"
+    },
+    {
+      "name": "gcc-release-build",
+      "description": "Build Release using GCC",
+      "configurePreset": "gcc-release"
+    },
+    {
+      "name": "clang-debug-build",
+      "description": "Build Debug using Clang",
+      "configurePreset": "clang-debug"
+    },
+    {
+      "name": "clang-release-build",
+      "description": "Build Release using Clang",
+      "configurePreset": "clang-release"
+    },
+    {
+      "name": "msvc-debug-build",
+      "description": "Build Debug using MSVC",
+      "configurePreset": "msvc-debug"
+    },
+    {
+      "name": "msvc-release-build",
+      "description": "Build Release using MSVC",
+      "configurePreset": "msvc-release"
+    }
+  ]
+}
