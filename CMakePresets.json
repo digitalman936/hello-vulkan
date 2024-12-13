@@ -13,9 +13,9 @@
       "generator": "Ninja"
     },
     {
-      "name": "gcc-debug",
+      "name": "ninja-gcc-debug",
       "inherits": "ninja-generic",
-      "description": "Ninja Debug build using GCC",
+      "description": "Ninja debug build using GCC compiler",
       "binaryDir": "${sourceDir}/build/cmake/ninja_gcc_debug",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "gcc",
@@ -23,9 +23,9 @@
       }
     },
     {
-      "name": "gcc-release",
+      "name": "ninja-gcc-release",
       "inherits": "ninja-generic",
-      "description": "Ninja Release build using GCC",
+      "description": "Ninja release build using GCC compiler",
       "binaryDir": "${sourceDir}/build/cmake/ninja_gcc_release",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "gcc",
@@ -33,9 +33,9 @@
       }
     },
     {
-      "name": "clang-debug",
+      "name": "ninja-clang-debug",
       "inherits": "ninja-generic",
-      "description": "Ninja Debug build using Clang",
+      "description": "Ninja debug build using Clang compiler",
       "binaryDir": "${sourceDir}/build/cmake/ninja_clang_debug",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "clang",
@@ -43,9 +43,9 @@
       }
     },
     {
-      "name": "clang-release",
+      "name": "ninja-clang-release",
       "inherits": "ninja-generic",
-      "description": "Ninja Release build using Clang",
+      "description": "Ninja release build using Clang compiler",
       "binaryDir": "${sourceDir}/build/cmake/ninja_clang_release",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "clang",
@@ -53,9 +53,9 @@
       }
     },
     {
-      "name": "msvc-debug",
+      "name": "ninja-msvc-debug",
       "inherits": "ninja-generic",
-      "description": "Ninja Debug build using MSVC",
+      "description": "Ninja debug build using Visual Studio MSVC compiler",
       "binaryDir": "${sourceDir}/build/cmake/ninja_msvc_debug",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
@@ -63,9 +63,9 @@
       }
     },
     {
-      "name": "msvc-release",
+      "name": "ninja-msvc-release",
       "inherits": "ninja-generic",
-      "description": "Ninja Release build using MSVC",
+      "description": "Ninja release build using Visual Studio MSVC compiler",
       "binaryDir": "${sourceDir}/build/cmake/ninja_msvc_release",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
@@ -75,34 +75,34 @@
   ],
   "buildPresets": [
     {
-      "name": "gcc-debug-build",
-      "description": "Build Debug using GCC",
-      "configurePreset": "gcc-debug"
+      "name": "ninja-gcc-debug-build",
+      "description": "Build Ninja debug using GCC compiler",
+      "configurePreset": "ninja-gcc-debug"
     },
     {
-      "name": "gcc-release-build",
-      "description": "Build Release using GCC",
-      "configurePreset": "gcc-release"
+      "name": "ninja-gcc-release-build",
+      "description": "Build Ninja release using GCC compiler",
+      "configurePreset": "ninja-gcc-release"
     },
     {
-      "name": "clang-debug-build",
-      "description": "Build Debug using Clang",
-      "configurePreset": "clang-debug"
+      "name": "ninja-clang-debug-build",
+      "description": "Build Ninja debug using Clang compiler",
+      "configurePreset": "ninja-clang-debug"
     },
     {
-      "name": "clang-release-build",
-      "description": "Build Release using Clang",
-      "configurePreset": "clang-release"
+      "name": "ninja-clang-release-build",
+      "description": "Build Ninja release using Clang compiler",
+      "configurePreset": "ninja-clang-release"
     },
     {
-      "name": "msvc-debug-build",
-      "description": "Build Debug using MSVC",
-      "configurePreset": "msvc-debug"
+      "name": "ninja-msvc-debug-build",
+      "description": "Build Ninja debug using Visual Studio MSVC compiler",
+      "configurePreset": "ninja-msvc-debug"
     },
     {
-      "name": "msvc-release-build",
-      "description": "Build Release using MSVC",
-      "configurePreset": "msvc-release"
+      "name": "ninja-msvc-release-build",
+      "description": "Build Ninja release using Visual Studio MSVC compiler",
+      "configurePreset": "ninja-msvc-release"
     }
   ]
 }

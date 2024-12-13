@@ -1,9 +1,7 @@
 find_package(Vulkan REQUIRED)
-
 set(SDL_STATIC ON)
 set(ENABLE_VULKAN ON)
 add_subdirectory(sdl3)
-
 add_subdirectory(glm)
 
 add_library(external INTERFACE)

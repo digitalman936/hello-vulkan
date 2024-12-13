@@ -4,7 +4,7 @@ This is a small passion project written with the VulkanHpp C++ bindings to rende
 first ever public repository and is relatively bare bones and straight forward to understand. Anyone can use this code
 without copyright restrictions, it's a public resource for everyone!
 
-See the [Credits](doc/credits) to view all the projects' dependencies and who I got my inspiration from.
+See the [Credits](CREDITS.md) to view all the projects' dependencies and who I got my inspiration from.
 
 Hopefully this repository will be useful to someone out there, happy coding :)
 
@@ -18,7 +18,7 @@ Hopefully this repository will be useful to someone out there, happy coding :)
 
 ### Build
 
-> **NOTE:** See the [Build Page](doc/build) if you're unsure what any of this means or if you get an error at any point.
+> **NOTE:** See the [Build Page](docs/README_build.md) if you're unsure what any of this means or if you get an error at any point.
 
 Get the sources:
 ```markdown
@@ -28,15 +28,15 @@ cd hello-vulkan
 
 Generate one of the presets based on your compiler.
 ```markdown
-cmake --preset clang-debug && cmake --preset clang-release     # Uses Ninja-Build with the Clang compiler
-cmake --preset gcc-debug && cmake --preset gcc-release         # Uses Ninja-Build with the GCC compiler
-cmake --preset msvc-debug && cmake --preset msvc-release       # Uses Ninja-Build with the MSVC compiler
+cmake --preset ninja-clang-debug && cmake --preset ninja-clang-release     # Uses Ninja-Build with the Clang compiler
+cmake --preset ninja-gcc-debug && cmake --preset ninja-gcc-release         # Uses Ninja-Build with the GCC compiler
+cmake --preset ninja-msvc-debug && cmake --preset ninja-msvc-release       # Uses Ninja-Build with the MSVC compiler
 ```
 
 Build your chosen preset.
 
 ```markdown
-cmake --build --preset clang-debug-build && cmake --build --preset clang-release-build
-cmake --build --preset gcc-debug-build && cmake --build --preset gcc-release-build
-cmake --build --preset msvc-debug-build && cmake --build --preset msvc-release-build
+cmake --build --preset ninja-clang-debug-build && cmake --build --preset ninja-clang-release-build
+cmake --build --preset ninja-gcc-debug-build && cmake --build --preset ninja-gcc-release-build
+cmake --build --preset ninja-msvc-debug-build && cmake --build --preset ninja-msvc-release-build
 ```
